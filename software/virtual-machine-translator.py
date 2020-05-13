@@ -1,3 +1,6 @@
+import sys
+
+
 class Parser:
     def __init__(self, file_name):
         file = open(f"{file_name}.vm", "r")
@@ -128,7 +131,8 @@ class Coder:
 
 
 def main():
-    file_name = "StaticTest"
+    file_name = sys.argv[1].split(".")
+    file_name = file_name[0]
     parser = Parser(file_name)
     coder = Coder(file_name)
     while parser.advance():
