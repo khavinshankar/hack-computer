@@ -1,0 +1,74 @@
+class GameMechanics {
+   field Runner runner; // the square in the game
+   field Picker picker; // the circle in the game
+   field int score; // keep track of the score
+   field int direction; // the square's current direction: 
+                        // 0=none, 1=up, 2=down, 3=left, 4=right
+
+   /** Constructs a new Square Game. */
+   constructor GameMechanics new() {
+      // Creates a 30 by 30 pixels square and positions it at the top-left
+      // of the screen and a circle with the radius of 10 at (200, 200)
+      let runner = Runner.new(0, 0, 30);
+      let picker = Picker.new(200, 200, 10);
+      let score = 0; // initializing score to 0
+      let direction = 0;  // initial state is no movement
+      return this;
+   }
+
+   /** Disposes this game. */
+   method void dispose() {
+      do runner.dispose();
+      do picker.dispose();
+      do Memory.deAlloc(this);
+      return;
+   }
+
+   /** to handle GameOver */
+   method int gameOver(){
+      do Output.printString("GAMEOVER");
+      do Output.println();
+      do Output.printString("SCORE: ");
+      do Output.printInt(score);
+      return 81; // key to quit the game
+   }
+
+   /** Runs the game: handles the user's inputs and moves the square accordingly */
+   method void run() {
+      var char key;  // the key currently pressed by the user
+      var boolean exit;
+      let exit = false;
+      
+      while (~exit) {
+         // waits for a key to be pressed
+         while (key = 0) {
+            let key = Keyboard.keyPressed();
+            do runner.move(direction);
+            // picker chases the runner
+            do picker.chase(runner);
+            // checks to see if picker and runner are in contact
+            if(picker.didCatch(runner)){
+               let key = gameOver();
+            }
+            let score = score + 1; // increments the score every frame
+         }
+         if (key = 81)  { let exit = true; }     // q key
+         if (key = 131) { let direction = 1; }   // up arrow
+         if (key = 133) { let direction = 2; }   // down arrow
+         if (key = 130) { let direction = 3; }   // left arrow
+         if (key = 132) { let direction = 4; }   // right arrow
+
+         // waits for the key to be released
+         while (~(key = 0)) {
+            let key = Keyboard.keyPressed();
+            do runner.move(direction);
+            do picker.chase(runner);
+            let score = score + 1; // increments the score every frame
+         }
+     } // while
+     return;
+   }
+}
+
+
+

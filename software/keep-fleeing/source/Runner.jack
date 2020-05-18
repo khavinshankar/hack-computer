@@ -1,0 +1,100 @@
+/** Implements a graphical square. */
+class Runner {
+
+   field int x, y; // screen location of the square's top-left corner
+   field int size; // length of this square, in pixels
+   field int speed; // speed of sqaure, no of pixels that square moves per frame
+
+   /** Constructs a new square with a given location and size. */
+   constructor Runner new(int Ax, int Ay, int Asize) {
+      let x = Ax;
+      let y = Ay;
+      let size = Asize;
+      let speed = 2;
+      do draw();
+      return this;
+   }
+
+   /** Accessors */
+   method int getX(){return x;}
+   method int getY(){return y;}
+   method int getSize(){return size;}
+
+   /** Disposes this square. */
+   method void dispose() {
+      do Memory.deAlloc(this);
+      return;
+   }
+
+   /** Draws the square on the screen. */
+   method void draw() {
+      do Screen.setColor(true);
+      do Screen.drawRectangle(x, y, x + size, y + size);
+      return;
+   }
+
+   /** Erases the square from the screen. */
+   method void erase() {
+      do Screen.setColor(false);
+      do Screen.drawRectangle(x, y, x + size, y + size);
+      return;
+   }
+   
+   /** Moves the square in the required direction. */
+   method void move(int direction) {
+      if (direction = 1) { do moveUp(); }
+      if (direction = 2) { do moveDown(); }
+      if (direction = 3) { do moveLeft(); }
+      if (direction = 4) { do moveRight(); }
+      do Sys.wait(5);  // delays the next movement, for smoothness
+      return;
+   }
+
+   /** Moves the square up by 2 pixels. */
+   method void moveUp() {
+      if (y > speed) {
+         do Screen.setColor(false);
+         do Screen.drawRectangle(x, (y + size) - speed, x + size, y + size);
+         let y = y - 3;
+         do Screen.setColor(true);
+         do Screen.drawRectangle(x, y, x + size, y + speed);
+      }
+      return;
+   }
+
+   /** Moves the square down by 2 pixels. */
+   method void moveDown() {
+      if ((y + size) < 254) {
+         do Screen.setColor(false);
+         do Screen.drawRectangle(x, y, x + size, y + speed);
+         let y = y + 3;
+         do Screen.setColor(true);
+         do Screen.drawRectangle(x, (y + size) - speed, x + size, y + size);
+      }
+      return;
+   }
+
+   /** Moves the square left by 2 pixels. */
+   method void moveLeft() {
+      if (x > speed) {
+         do Screen.setColor(false);
+         do Screen.drawRectangle((x + size) - speed, y, x + size, y + size);
+         let x = x - 3;
+         do Screen.setColor(true);
+         do Screen.drawRectangle(x, y, x + speed, y + size);
+      }
+      return;
+   }
+
+   /** Moves the square right by 2 pixels. */
+   method void moveRight() {
+      if ((x + size) < 510) {
+         do Screen.setColor(false);
+         do Screen.drawRectangle(x, y, x + speed, y + size);
+         let x = x + 3;
+         do Screen.setColor(true);
+         do Screen.drawRectangle((x + size) - speed, y, x + size, y + size);
+      }
+      return;
+   }
+}

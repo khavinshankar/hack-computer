@@ -1,0 +1,128 @@
+/** Implements a graphical circle. */
+class Picker {
+
+   field int x, y; // screen location of the circles's center
+   field int radius; // radius of this circle, in pixels
+
+   /** Constructs a new circle with a given location and size. */
+   constructor Picker new(int Ax, int Ay, int Aradius) {
+   let x = Ax;
+   let y = Ay;
+   let radius = Aradius;
+   do draw();
+   return this;
+   }
+
+   /** Disposes this circle. */
+   method void dispose() {
+   do Memory.deAlloc(this);
+   return;
+   }
+
+   /** Draws the circle on the screen. */
+   method void draw() {
+   do Screen.setColor(true);
+   do Screen.drawCircle(x, y, radius);
+   return;
+   }
+
+   /** Erases the circle from the screen. */
+   method void erase() {
+   do Screen.setColor(false);
+   do Screen.drawCircle(x, y, radius);
+   return;
+   }
+   
+   /** Follows, chases the runner */
+   method void chase(Runner runner){
+   if(runner.getX() > x){
+      do moveRight();
+   }else {
+      do moveLeft();
+   }
+   if(runner.getY() > y){
+      do moveDown();
+   }else {
+      do moveUp();
+   }
+   do Sys.wait(7);  // delays the next movements, for smooth movements
+   return;
+   }
+   
+   /** Returns true if circle and square are in contact */
+   method boolean didCatch(Runner runner) {
+   var int squareRadius, distance, xbar, ybar, sqcy, sqcx;
+   let squareRadius = runner.getSize()/2;
+
+   /** 
+   let xbar = ((runner.getX()+squareRadius)-x)*((runner.getX()+squareRadius)-x);
+   let ybar = ((runner.getY()+squareRadius)-y)*((runner.getY()+squareRadius)-y);
+   let distance = Math.sqrt((xbar + ybar));
+
+   This logic is poping so many errors so, a work arround is bellow */
+
+   let sqcx = runner.getX()+squareRadius; // square center x-coord
+   let sqcy = runner.getY()+squareRadius; // square center y-coord
+
+   let xbar = x - sqcx; // x distance b/w circle and square
+   if(xbar < 0){ let xbar = -xbar; } // distance should be positive
+   let ybar = y - sqcy; // y distance b/w circle and square
+   if(ybar < 0){ let ybar = -ybar; } // distance should be positive
+   let distance = squareRadius+radius; // ref distance
+
+   if((xbar < distance) & (ybar < distance)){
+      return true;
+   }
+   return false;
+   }
+   
+
+   /** Moves the circle up by 2 pixels. */
+   method void moveUp() {
+   if (y > (2*radius)) {
+      do Screen.setColor(false);
+      do Screen.drawCircle(x, y, radius*2);
+      let y = y - 2;
+      do Screen.setColor(true);
+      do Screen.drawCircle(x, y, radius);
+   }
+   return;
+   }
+
+   /** Moves the circle down by 2 pixels. */
+   method void moveDown() {
+   if ((y + radius) < 254) {
+      do Screen.setColor(false);
+      do Screen.drawCircle(x, y, radius*2);
+      let y = y + 2;
+      do Screen.setColor(true);
+      do Screen.drawCircle(x, (y + radius) - 1, radius);
+   }
+   return;
+   }
+
+   /** Moves the circle left by 2 pixels. */
+   method void moveLeft() {
+   if (x > (2*radius)) {
+      do Screen.setColor(false);
+      do Screen.drawCircle(x, y, radius*2);
+      let x = x - 2;
+      do Screen.setColor(true);
+      do Screen.drawCircle(x, y, radius);
+   }
+   return;
+   }
+
+   /** Moves the circle right by 2 pixels. */
+   method void moveRight() {
+   if ((x + radius) < 510) {
+      do Screen.setColor(false);
+      do Screen.drawCircle(x, y, radius*2);
+      let x = x + 2;
+      do Screen.setColor(true);
+      do Screen.drawCircle((x + radius) - 1, y, radius);
+   }
+   return;
+   }
+}
+ 

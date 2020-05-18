@@ -1,0 +1,16 @@
+/** Initializes a new Square Dance game and starts running it. */
+class Main {
+    function void main() {
+        var GameMechanics game;
+        let game = GameMechanics.new();
+        do game.run();
+        do game.dispose();
+        return;
+    }
+}
+
+/** For further improvements,
+  * Can add barriers,
+  * Can add end point and level schemes
+  * Can make it similar to pacman *
+  */
