@@ -21,7 +21,8 @@ class Tokenizer:
         return new
 
     def remove_comments(self, data):
-        pattern = re.compile(r"\/\*\*.+?\*\/")  # multi line comments
+        pattern = re.compile(r"\/\*\*.+?\*\/", re.MULTILINE |
+                             re.DOTALL)  # multi line comments
         multiline_comments = pattern.findall(data)
         for mlc in multiline_comments:
             data = data.replace(mlc, "")
@@ -33,9 +34,10 @@ class Tokenizer:
         return new
 
     def tokenize(self, data):
-        variable = re.compile(r"([a-zA-Z_][a-zA-Z_0-9]*)")
-        num_const = re.compile(r"(\d+)")
-        str_const = re.compile(r'(\".+\")')
+        variable = re.compile(
+            r"([a-zA-Z_][a-zA-Z_0-9]*)", re.MULTILINE | re.DOTALL)
+        num_const = re.compile(r"(\d+)", re.MULTILINE | re.DOTALL)
+        str_const = re.compile(r'(\".+\")', re.MULTILINE | re.DOTALL)
         data = self.handleStringConstants(data)
         for x in data:
             if not str_const.match(x):
@@ -111,14 +113,11 @@ class Tokenizer:
         return (self.current_token, tokenType)
 
 
-def main():
-    tokenizer = Tokenizer("Main.jack")
-    file = open("xml.xml", "a")
+def tokenizerXML(file_name):
+    tokenizer = Tokenizer(f"{file_name}.jack")
+    file = open(f"{file_name}T.xml", "a")
     file.write("<tokens>\n")
     while tokenizer.advance():
         (token, tokenType) = tokenizer.tokenWithType()
         file.write(f"<{tokenType}> {token} </{tokenType}>\n")
     file.write("</tokens>")
-
-
-main()
