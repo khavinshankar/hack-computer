@@ -103,6 +103,11 @@
         }
     }
 
+    /** Returns the modulus. */
+    function int mod(int x, int y) {
+        return x - ((x / y) * y);
+    }
+
     /** Returns the integer part of the square root of x. */
     function int sqrt(int x) {
         var int beg, end, mid, val;
@@ -154,5 +159,10 @@
         } else {
             return b;
         }
+    }
+
+    /** Gives the value when ith bit is 1 and rest is 0 */
+    function int twoPower(int bit) {
+        return ref[bit];
     }
 }
