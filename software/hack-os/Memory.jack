@@ -1,0 +1,81 @@
+/**
+ * This library provides two services: direct access to the computer's main
+ * memory (RAM), and allocation and recycling of memory blocks. The Hack RAM
+ * consists of 32,768 words, each holding a 16-bit binary number.
+ */ 
+ class Memory {
+
+    static Array ram, head;
+    static int len, ptr;
+
+    /** Initializes the class. */
+    function void init() {
+        let ram = 0;
+
+        let head = 2048;
+        let ptr = 0;
+        let len = 1;
+
+        let head[ptr] = null;
+        let head[len] = 14336 - 2;
+
+        return;
+    }
+
+    /** Returns the RAM value at the given address. */
+    function int peek(int address) {
+        return ram[address];
+    }
+
+    /** Sets the RAM value at the given address to the given value. */
+    function void poke(int address, int value) {
+        let ram[address] = value;
+        return;
+    }
+
+    /** Finds an available RAM block of the given size and returns
+     *  a reference to its base address. */
+    function int alloc(int size) {
+        var Array prev, curr, next;
+
+        let curr = head;
+        let prev = -1;
+
+        while(curr[len] < size) {
+            let prev = curr;
+            let curr = curr[ptr];
+
+            // no free segment available
+            if(curr = null) {
+                return -1;
+            }
+        }
+
+        let next = curr + size + 2;
+        let next[ptr] = curr[ptr];
+        let next[len] = curr[len] - size - 2;
+        
+        let curr[ptr] = null;
+        let curr[len] = size;
+        
+        if(prev = -1) {
+            let head = next;
+        } else {
+            let prev[ptr] = next;
+        }
+
+        return curr + 2;
+    }
+
+    /** De-allocates the given object (cast as an array) by making
+     *  it available for future allocations. */
+    function void deAlloc(Array obj) {
+        var Array segment;
+        let segment = obj - 2;
+
+        let segment[ptr] = head;
+        let head = segment;
+        
+        return;
+    }    
+}
