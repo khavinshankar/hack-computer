@@ -42,7 +42,7 @@
 
         let register = (32 * y) + (x / 16);
         let value = Memory.peek(16384 + register);
-        let mask = Math.calcMask(Math.mod(x, 16));
+        let mask = Math.twoPower(Math.mod(x, 16));
 
         if(color) {
             do Memory.poke(display + register, value | mask);
